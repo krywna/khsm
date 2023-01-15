@@ -119,14 +119,21 @@ RSpec.describe GamesController, type: :controller do
 
   describe "#answer" do
     context "anon" do
-      it "kick from #answer" do
         # вызываем экшен
-        put :answer, id: game_w_questions.id
+        before { put :answer, id: game_w_questions.id }
+
         # проверяем ответ
-        expect(response.status).not_to eq(200) # статус не 200 ОК
-        expect(response).to redirect_to(new_user_session_path) # devise должен отправить на логин
-        expect(flash[:alert]).not_to be_empty # во flash должен быть прописана ошибка
-      end
+        it "not 200 status" do
+          expect(response.status).not_to eq(200) # статус не 200 ОК
+        end
+
+        it "redirect to login form" do
+          expect(response).to redirect_to(new_user_session_path) # devise должен отправить на логин
+        end
+
+        it "alert not empty" do
+          expect(flash[:alert]).not_to be_empty # во flash должен быть прописана ошибка
+        end
     end
 
     context "usual user" do
