@@ -44,7 +44,7 @@ RSpec.describe GamesController, type: :controller do
         game = assigns(:game) # вытаскиваем из контроллера поле @game
 
         # проверяем состояние этой игры
-        expect(game.finished?).to be_falsey
+        expect(game.finished?).to be false
         expect(game.user).to eq(user)
         # и редирект на страницу этой игры
         expect(response).to redirect_to(game_path(game))
@@ -91,7 +91,7 @@ RSpec.describe GamesController, type: :controller do
       let(:second_game_w_questions) { FactoryGirl.create(:game_with_questions, user: second_user) }
 
       # перед каждым тестом в группе
-      before(:each) { sign_in user } # логиним юзера user с помощью спец. Devise метода sign_in
+      before { sign_in user } # логиним юзера user с помощью спец. Devise метода sign_in
 
       # юзер видит свою игру
 
@@ -202,7 +202,7 @@ RSpec.describe GamesController, type: :controller do
       let(:second_game_w_questions) { FactoryGirl.create(:game_with_questions, user: second_user) }
 
       # перед каждым тестом в группе
-      before(:each) { sign_in user } # логиним юзера user с помощью спец. Devise метода sign_in
+      before { sign_in user } # логиним юзера user с помощью спец. Devise метода sign_in
         it "take money" do
         game_w_questions.update_attribute(:current_level, 2)
 
@@ -230,7 +230,7 @@ RSpec.describe GamesController, type: :controller do
       it 'uses audience help' do
         # сперва проверяем что в подсказках текущего вопроса пусто
         expect(game_w_questions.current_game_question.help_hash[:audience_help]).not_to be
-        expect(game_w_questions.audience_help_used).to be_falsey
+        expect(game_w_questions.audience_help_used).to be false
 
         # фигачим запрос в контроллен с нужным типом
         put :help, id: game_w_questions.id, help_type: :audience_help

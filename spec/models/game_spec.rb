@@ -52,6 +52,21 @@ RSpec.describe Game, type: :model do
 
   # Тесты на основную игровую логику
   context 'game mechanics' do
+
+    describe "#current_game_question" do
+      it "return current question" do
+        expect(game_w_questions.current_game_question).to eq game_w_questions.game_questions[0]
+      end
+    end
+
+    describe "#previous_level" do
+      before { game_w_questions.answer_current_question!(q.correct_answer_key) }
+
+      it "return previous_level" do
+        expect(game_w_questions.previous_level).to eq 0
+      end
+    end
+
     # Правильный ответ должен продолжать игру
     it 'answer correct continues game' do
       # Текущий уровень игры и статус
@@ -69,7 +84,7 @@ RSpec.describe Game, type: :model do
 
       # Игра продолжается
       expect(game_w_questions.status).to eq(:in_progress)
-      expect(game_w_questions.finished?).to be_falsey
+      expect(game_w_questions.finished?).to be false
     end
   end
 end
