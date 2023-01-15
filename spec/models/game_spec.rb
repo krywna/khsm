@@ -90,4 +90,60 @@ RSpec.describe Game, type: :model do
       expect(game_w_questions.finished?).to be false
     end
   end
+
+  describe "#answer_current_question!" do
+    before do
+      game_w_questions.current_level = level
+      game_w_questions.created_at = start_time
+      game_w_questions.answer_current_question!(answer_key)
+    end
+    let!(:level) { game_w_questions.current_level }
+    let!(:start_time) { Time.now }
+
+    context "answer correct" do
+      let!(:answer_key) { game_w_questions.current_game_question.correct_answer_key }
+
+      context "last question" do
+        let!(:level) { Question::QUESTION_LEVELS.max }
+
+        it "assigns final prize" do
+          expect(game_w_questions.prize).to eq Game::PRIZES.last
+        end
+
+        it "win game" do
+          expect(game_w_questions.status).to eq(:won)
+        end
+      end
+
+      context "not last question" do
+        it "moves to next level" do
+          expect(game_w_questions.current_level).to eq 1
+        end
+
+        it "continues game" do
+          expect(game_w_questions.status).to eq(:in_progress)
+        end
+      end
+
+      context "timeout" do
+        let!(:start_time) { 1.hour.ago }
+
+        it "finishes game with status timeout" do
+          expect(game_w_questions.status).to eq(:timeout)
+        end
+      end
+    end
+
+    context "wrong answer" do
+      let!(:answer_key) { "a" }
+
+      it "finish game" do
+        expect(game_w_questions.finished?).to be true
+      end
+
+      it "finishes with status fail" do
+        expect(game_w_questions.status).to eq(:fail)
+      end
+    end
+  end
 end
