@@ -233,7 +233,7 @@ RSpec.describe GamesController, type: :controller do
 
     context "audience help" do
       # перед каждым тестом в группе
-    # тест на отработку "помощи зала"
+      # тест на отработку "помощи зала"
       it 'uses audience help' do
         # сперва проверяем что в подсказках текущего вопроса пусто
         expect(game_w_questions.current_game_question.help_hash[:audience_help]).not_to be
@@ -249,6 +249,45 @@ RSpec.describe GamesController, type: :controller do
         expect(game.current_game_question.help_hash[:audience_help]).to be
         expect(game.current_game_question.help_hash[:audience_help].keys).to contain_exactly('a', 'b', 'c', 'd')
         expect(response).to redirect_to(game_path(game))
+      end
+    end
+
+    context "fifty fifty used" do
+      before { put :help, id: game_w_questions.id, help_type: :fifty_fifty }
+      let!(:game) { assigns(:game) }
+
+      it "game isn't finished" do
+        expect(game.finished?).to be false
+      end
+
+      it "used" do
+        expect(game.fifty_fifty_used).to be true
+      end
+
+      it "include in help_hash" do
+        expect(game.current_game_question.help_hash[:fifty_fifty]).to be
+      end
+
+      it "include rigth answer" do
+        expect(game.current_game_question.help_hash[:fifty_fifty].first).to eq("d")
+      end
+
+      it "include one wrong answer" do
+        expect(%w[a b c]).to include(game.current_game_question.help_hash[:fifty_fifty].last)
+      end
+
+      it "correct redirect" do
+        expect(response).to redirect_to(game_path(game))
+      end
+    end
+
+    context "fifty fifty didn't used" do
+      it "help hash doesn't include" do
+        expect(game_w_questions.current_game_question.help_hash[:fifty_fifty]).not_to be
+      end
+
+      it "didn't use" do
+        expect(game_w_questions.fifty_fifty_used).to be false
       end
     end
   end
