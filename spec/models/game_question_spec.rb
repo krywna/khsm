@@ -76,4 +76,25 @@ RSpec.describe GameQuestion, type: :model do
       expect(game_question.correct_answer_key).to eq('b')
     end
   end
+
+  describe "#add_friend_call" do
+    context "friend_call gelp added" do
+      before { game_question.add_friend_call }
+      let!(:friend_call) { game_question.help_hash[:friend_call] }
+
+      it "include in help_hash" do
+        expect(game_question.help_hash).to include(:friend_call)
+      end
+
+      it "answer include only right varinats" do
+        expect(%w[A B C D]).to include(friend_call.last)
+      end
+    end
+
+    context "friend_call help didn'add" do
+      it "doesn't include in help_hash" do
+        expect(game_question.help_hash).not_to include(:friend_call)
+      end
+    end
+  end
 end
