@@ -45,8 +45,10 @@
     <% if user_signed_in? %>
       <div class="navbar-form navbar-right">
 
-        <% if current_user.is_admin %>
-            <%= link_to 'Залить новые вопросы', new_questions_path, class: 'btn navbar-btn btn-warning btn-xs' %>
+        <% if current_user.is_admin? %>
+          <%# Ссылка на админку %>
+          <%= link_to 'Админка', rails_admin_path, class: 'btn navbar-btn btn-danger btn-xs' %>
+          <%= link_to 'Залить новые вопросы', new_questions_path, class: 'btn navbar-btn btn-warning btn-xs' %>
         <% end %>
 
 

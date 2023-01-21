@@ -1,28 +1,19 @@
+# (c) goodprogrammer.ru
 require 'game_help_generator'
+
+# Игровой вопрос — модель, которая связывает игру и вопрос. При создании новой
+# игры формируется массив из 15 игровых вопросов для конкретной игры.
 class GameQuestion < ActiveRecord::Base
   belongs_to :game
-
   belongs_to :question
 
   delegate :text, :level, to: :question, allow_nil: true
 
   validates :game, :question, presence: true
-
   validates :a, :b, :c, :d, inclusion: {in: 1..4}
 
   serialize :help_hash, Hash
 
-  # help_hash у нас имеет такой формат:
-  # {
-  #   # При использовании подсказски остались варианты a и b
-  #   fifty_fifty: ['a', 'b'],
-  #
-  #   # Распределение голосов по вариантам a, b, c, d
-  #   audience_help: {'a' => 42, 'c' => 37 ...},
-  #
-  #   # Друг решил, что правильный ответ А (просто пишем текстом)
-  #   friend_call: 'Василий Петрович считает, что правильный ответ A'
-  # }
   def variants
     {
       'a' => question.read_attribute("answer#{a}"),
@@ -54,7 +45,6 @@ class GameQuestion < ActiveRecord::Base
   end
 
   def add_audience_help
-    # Массив ключей
     keys_to_use = keys_to_use_in_help
 
     self.help_hash[:audience_help] =
