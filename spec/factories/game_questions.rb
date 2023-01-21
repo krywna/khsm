@@ -5,13 +5,13 @@
 # См. другие примеры:
 #
 # http://www.rubydoc.info/gems/factory_girl/file/GETTING_STARTED.md
-FactoryGirl.define do
+FactoryBot.define do
   factory :game_question do
     # Всегда одинаковое распределение ответов, в тестах удобнее детерминизм.
-    a 4
-    b 3
-    c 2
-    d 1
+    a {4}
+    b {3}
+    c {2}
+    d {1}
 
     # Связь с игрой и вопросом. Если при создании game_question не указать явно
     # объекты Игра и Вопрос, наша фабрика сама создаст и пропишет нужные

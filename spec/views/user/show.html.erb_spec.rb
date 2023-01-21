@@ -3,7 +3,7 @@ require "rails_helper"
 # Тест на шаблон users/show.html.erb
 
 RSpec.describe "users/show", type: :view do
-  let(:user) {  FactoryGirl.create(:user) }
+  let(:user) { create(:user) }
 
   context "user on his page" do
     before do
@@ -31,7 +31,7 @@ RSpec.describe "users/show", type: :view do
   end
 
   context "user on someone's page" do
-    let(:second_user) {  FactoryGirl.create(:user) }
+    let(:second_user) { create(:user) }
 
     before do
       sign_in second_user

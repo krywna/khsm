@@ -2,11 +2,11 @@ require "rails_helper"
 
 # Начинаем описывать функционал, связанный с созданием игры
 RSpec.feature "USER viewing someone's profile", type: :feature do
-  let(:user) { FactoryGirl.create :user }
-  let(:second_user) { FactoryGirl.create :user }
+  let(:user) { FactoryBot.create :user }
+  let(:second_user) { FactoryBot.create :user }
   let!(:questions) do
     (0..14).to_a.map do |i|
-      FactoryGirl.create(
+      FactoryBot.create(
         :question, level: i,
         text: "Вопрос № #{i}?",
         answer1: "1", answer2: "2", answer3: "3", answer4: "4"
@@ -14,8 +14,8 @@ RSpec.feature "USER viewing someone's profile", type: :feature do
     end
   end
 
-  let(:first_game) { FactoryGirl.create(:game_with_questions, user: user) }
-  let(:second_game) { FactoryGirl.create(:game_with_questions, user: user) }
+  let(:first_game) { FactoryBot.create(:game_with_questions, user: user) }
+  let(:second_game) { FactoryBot.create(:game_with_questions, user: user) }
 
   before do
     first_game.use_help(:fifty_fifty)
